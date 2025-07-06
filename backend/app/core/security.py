@@ -44,9 +44,10 @@ def decode_token(token: str) -> Optional[TokenPayload]:
     """
     解码JWT令牌并返回负载。
     """
+    secret_key = settings.Secret_Key or "default-secret-key"
     try:
         payload = jwt.decode(
-            token, "your-secret-key", algorithms=["HS256"]
+            token, secret_key, algorithms=["HS256"]
         )
         # 使用Pydantic进行负载校验
         token_data = TokenPayload(**payload)
