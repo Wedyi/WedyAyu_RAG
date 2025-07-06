@@ -353,3 +353,78 @@
 - **安全性：** 定期进行安全审计和漏洞扫描，及时修复安全问题 [29, 7, 33]。
 
 通过以上详细的开发技术方案，我们可以有条不
+
+
+frontend/
+├── public/
+├── src/
+│   ├── api/                # API 请求服务 (封装 axios/fetch)
+│   │   ├── knowledgeBase.ts
+│   │   └── workflow.ts
+│   ├── assets/             # 静态资源 (图片, SVG 图标)
+│   ├── components/         # 可复用的UI组件
+│   │   ├── common/         # 按钮, 输入框, Modal等
+│   │   └── layout/         # 页面布局 (Header, Sidebar)
+│   ├── config/             # 项目配置 (主题, API 地址)
+│   ├── features/           # 按功能模块组织代码 (核心)
+│   │   ├── canvas/         # 画布核心逻辑
+│   │   │   ├── CanvasEditor.tsx  # 主画布组件
+│   │   │   ├── custom-nodes/ # 自定义节点的前端样式
+│   │   │   ├── NodePanel.tsx     # 左侧节点选择面板
+│   │   │   └── ConfigPanel.tsx   # 右侧节点配置面板
+│   │   ├── knowledge-base/ # 知识库管理UI
+│   │   ├── app-market/     # 应用市场/模板
+│   │   └── auth/           # 认证 (登录, 注册)
+│   ├── hooks/              # 自定义 React Hooks
+│   ├── pages/              # 页面级组件
+│   ├── store/              # 全局状态管理 (Zustand/Redux)
+│   │   └── workflowStore.ts # 管理画布的节点和边
+│   └── types/              # TypeScript 类型定义
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
+
+
+backend/
+├── app/
+│   ├── api/                # API 路由/端点
+│   │   ├── v1/
+│   │   │   ├── endpoints/
+│   │   │   │   ├── auth.py         # 用户认证
+│   │   │   │   ├── projects.py     # 项目/工作流管理
+│   │   │   │   ├── knowledge_bases.py # 知识库管理
+│   │   │   │   └── app_execution.py # 应用执行与调试
+│   │   │   └── router.py       # 组合所有v1路由
+│   │   └── deps.py           # API 依赖注入 (如获取当前用户)
+│   ├── core/               # 核心配置与工具
+│   │   ├── config.py         # 全局配置 (从环境变量加载)
+│   │   └── security.py       # 密码哈希, JWT令牌
+│   ├── crud/               # 数据库增删改查操作
+│   ├── db/                 # 数据库连接与会话
+│   │   └── session.py
+│   ├── models/             # 数据库模型 (SQLAlchemy)
+│   │   ├── user.py
+│   │   ├── project.py
+│   │   └── knowledge_base.py
+│   ├── schemas/            # 数据校验模型 (Pydantic)
+│   │   ├── user.py
+│   │   ├── project.py
+│   │   └── token.py
+│   └── services/           # 业务逻辑服务层 (核心)
+│       ├── rag_engine/       # RAG 工作流执行引擎
+│       │   ├── graph_executor.py # 图执行器, 解析JSON并运行
+│       │   ├── nodes/          # 定义所有节点的行为 (插件化)
+│       │   │   ├── __init__.py
+│       │   │   ├── base_node.py  # 节点基类
+│       │   │   ├── input_node.py # 输入节点
+│       │   │   ├── llm_node.py     # LLM 调用节点
+│       │   │   ├── retrieval_node.py # 检索节点
+│       │   │   └── parser_node.py  # 文档解析节点
+│       │   ├── data_loaders/   # 文档加载器 (PDF, TXT, URL)
+│       │   └── vector_stores/  # 向量数据库接口
+│       ├── knowledge_base_service.py # 知识库文件处理、切分、向量化
+│       └── project_service.py        # 项目的保存、加载等
+├── tests/                # 测试用例
+├── .env                  # 环境变量 (存储API Keys等敏感信息)
+├── main.py               # FastAPI 应用入口
+└── requirements.txt        # Python 依赖
